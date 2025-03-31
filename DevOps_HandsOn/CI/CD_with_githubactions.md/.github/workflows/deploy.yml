@@ -1,0 +1,36 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment when code is pushed to main branch
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Authenticate with Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+
+    - name: Build and push Docker image
+      run: |
+        gcloud auth configure-docker
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app .
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy my-app \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app \
+          --platform managed \
+          --region us-central1 \
+          --allow-unauthenticated
