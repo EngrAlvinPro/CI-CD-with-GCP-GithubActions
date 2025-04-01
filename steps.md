@@ -16,10 +16,15 @@ This project demonstrates a **CI/CD pipeline** using **GitHub Actions** to autom
 ## 🏗️ Project Structure
 
 /ci-cd-project
+
 │── app.py
+
 │── Dockerfile
+
 │── requirements.txt
+
 │── README.md
+
 │── .github/
 │   └── workflows/
 │       └── deploy.yaml  # GitHub Actions CI/CD workflow
