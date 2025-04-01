@@ -1,7 +1,5 @@
 📜 README.md - CI/CD with GitHub Actions & Google Cloud Run
-md
-Copy
-Edit
+
 # 🚀 CI/CD Pipeline with GitHub Actions & Google Cloud Run
 
 This project demonstrates a **CI/CD pipeline** using **GitHub Actions** to automatically build, test, and deploy a Flask web application to **Google Cloud Run**.
@@ -17,11 +15,21 @@ This project demonstrates a **CI/CD pipeline** using **GitHub Actions** to autom
 
 ## 🏗️ Project Structure
 
-/ci-cd-project │── app.py │── Dockerfile │── requirements.txt │── .github/workflows/deploy.yaml # GitHub Actions CI/CD workflow │── templates/ │ └── index.html │── static/ │ ├── style.css │ ├── script.js (optional) │ └── images/ │ ├── logo.png (optional) │── README.md
-
-yaml
-Copy
-Edit
+/ci-cd-project
+│── app.py
+│── Dockerfile
+│── requirements.txt
+│── README.md
+│── .github/
+│   └── workflows/
+│       └── deploy.yaml  # GitHub Actions CI/CD workflow
+│── templates/
+│   └── index.html
+│── static/
+│   ├── style.css
+│   ├── script.js  # (optional)
+│   └── images/
+│       └── logo.png  # (optional)
 
 ---
 
@@ -41,31 +49,24 @@ GitHub Repository connected to your project.
 1️⃣ Enable Required GCP Services
 Run the following command to enable necessary APIs:
 
-sh
-Copy
-Edit
 gcloud services enable run.googleapis.com \
     cloudbuild.googleapis.com \
     artifactregistry.googleapis.com
 2️⃣ Create an Artifact Registry
-sh
-Copy
-Edit
+```
 gcloud artifacts repositories create my-app-repo \
     --repository-format=docker \
     --location=us-central1 \
     --description="Docker repository for my app"
+```    
 3️⃣ Create & Assign a Service Account
-sh
-Copy
-Edit
+```
 gcloud iam service-accounts create github-actions \
     --display-name="GitHub Actions Deployment SA"
-Grant permissions:
+```
 
-sh
-Copy
-Edit
+Grant permissions:
+```
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --member="serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/run.admin"
@@ -73,15 +74,17 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --member="serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/iam.serviceAccountUser"
+```
+
 🚀 Set Up GitHub Actions Workflow
 1️⃣ Store GCP Credentials in GitHub
 Generate a JSON key for your service account:
 
-sh
-Copy
-Edit
+```
 gcloud iam service-accounts keys create key.json \
     --iam-account=github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com
+```
+
 Go to GitHub Repository → Settings → Secrets and Variables → Actions → New Repository Secret
 
 Name: GCP_SA_KEY
@@ -93,9 +96,7 @@ Also, add:
 GCP_PROJECT_ID → Your GCP project ID
 
 📜 GitHub Actions Workflow ( .github/workflows/deploy.yaml )
-yaml
-Copy
-Edit
+```
 name: Deploy to Google Cloud Run
 
 on:
@@ -132,10 +133,10 @@ jobs:
           --platform managed \
           --region us-central1 \
           --allow-unauthenticated
+```
+
 📝 Flask Web App (app.py)
-python
-Copy
-Edit
+```
 from flask import Flask, render_template
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
@@ -146,10 +147,11 @@ def home():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
+```
+
 🎨 Web UI (static/style.css)
-css
-Copy
-Edit
+
+```
 body {
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
@@ -176,10 +178,10 @@ h1 { color: #ffeb3b; }
     transition: all 0.3s ease;
 }
 .button:hover { background: #f44336; transform: scale(1.05); }
+```
+
 🐳 Dockerfile
-dockerfile
-Copy
-Edit
+```
 FROM python:3.9
 
 WORKDIR /app
@@ -187,38 +189,30 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8080
 CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
+```
 📌 Deployment Instructions
 1️⃣ Push Code to GitHub
-sh
-Copy
-Edit
+```
 git add .
 git commit -m "Initial commit with CI/CD setup"
 git push origin main
+```
+
 2️⃣ GitHub Actions Triggers Deployment
 GitHub Actions automatically builds & deploys your app to Google Cloud Run.
 
 3️⃣ View Your Live App
 Run this command to get your app URL:
 
-sh
-Copy
-Edit
 gcloud run services describe my-app --platform managed --region us-central1 --format 'value(status.url)'
 Example output:
 
-arduino
-Copy
-Edit
 https://my-app-xyz.run.app
 Open in your browser 🎉
 
 🚀 Deploy a New Version
 Make changes and push them:
 
-sh
-Copy
-Edit
 git add .
 git commit -m "Updated UI"
 git push origin main
@@ -245,10 +239,7 @@ Now, every push to main automatically builds & deploys your app! 🚀
 📌 Author
 👤 Alvin - DevOps Enthusiast 🚀
 
-yaml
-Copy
-Edit
+
 
 ---
 
-This README will make your repo look **professional & beginner-friendly**! Let me know if 
