@@ -1,9 +1,18 @@
-# Use official Python image
+# Use the official Python image
 FROM python:3.9
 
+# Set working directory
 WORKDIR /app
+
+# Copy files
 COPY . /app
 
-RUN pip install flask
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "app.py"]
+# Expose port
+EXPOSE 8080
+
+# Run the app using Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
+
